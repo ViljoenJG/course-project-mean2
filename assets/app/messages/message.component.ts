@@ -1,5 +1,6 @@
-import {Component} from "@angular/core";
+import {Component, Input, Output, EventEmitter} from "@angular/core";
 import {Message} from "./message";
+import {MessageService} from "./message.service";
 
 @Component({
     selector: 'my-message',
@@ -13,8 +14,8 @@ import {Message} from "./message";
                     {{ message.username }}
                 </div>
                 <div class="config">
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
+                    <a href="#" (click)="onEdit()">Edit</a>
+                    <a href="#" (click)="onDelete()">Delete</a>
                 </div>
             </footer>
         </article>
@@ -36,5 +37,16 @@ import {Message} from "./message";
 })
 
 export class MessageComponent {
-    message: Message = new Message('The content', null, 'Kobus');
+    @Input() message: Message;
+    @Output() editClicked = new EventEmitter<string>();
+
+    constructor(private _messageService: MessageService) {}
+
+    onEdit() {
+        this._messageService.editMessage(this.message);
+    }
+
+    onDelete() {
+        this._messageService.deleteMessage(this.message);
+    }
 }
