@@ -14,8 +14,8 @@ import {MessageService} from "./message.service";
                     {{ message.username }}
                 </div>
                 <div class="config">
-                    <a href="#" (click)="onEdit()">Edit</a>
-                    <a href="#" (click)="onDelete()">Delete</a>
+                    <a (click)="onEdit()">Edit</a>
+                    <a (click)="onDelete()">Delete</a>
                 </div>
             </footer>
         </article>
