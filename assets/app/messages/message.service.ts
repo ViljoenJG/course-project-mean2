@@ -26,7 +26,7 @@ export class MessageService {
     getMessages() {
         return this._http.get('http://localhost:3000/message')
             .map(response => {
-                const data = response.json().obj
+                const data = response.json().obj;
                 let objs: any[] = [];
                 for (let i=0; i < data.length; i++) {
                     let message = new Message(data[i].content, data[i]._id, 'Dummy', null);
@@ -34,15 +34,25 @@ export class MessageService {
                 }
                 return objs;
             })
-            .catch(error => Observable.throw(error.json()));;
+            .catch(error => Observable.throw(error.json()));
+    }
+
+    updateMessage(message: Message) {
+        const body = JSON.stringify(message);
+        const headers = new Headers({'Content-Type': 'application/json'});
+        return this._http.patch('http://localhost:3000/message/' + message.messageId, body, {headers: headers})
+            .map(response => response.json())
+            .catch(error => Observable.throw(error.json()));
     }
 
     editMessage(message: Message) {
         this.messageIsEdit.emit(message);
-        //this.messages[this.messages.indexOf(message)] = new Message('Edited', null, 'Kobus')
     }
 
     deleteMessage(message: Message) {
         this.messages.splice(this.messages.indexOf(message), 1);
+        return this._http.delete('http://localhost:3000/message/' + message.messageId)
+            .map(response => response.json())
+            .catch(error => Observable.throw(error.json()));
     }
 }
