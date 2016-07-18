@@ -1,12 +1,13 @@
 import {Component, OnInit} from "@angular/core";
 import {Message} from "./message";
 import {MessageService} from "./message.service";
+import {ErrorService} from "../errors/error.service";
 
 @Component({
     selector: 'my-message-input',
     template: `
       <section class="col-md-8 col-md-offset-2">
-      <form (ngSubmit)="onSubmit(f.value)" #f="ngForm">
+      <form (ngSubmit)="onSubmit(f.value, input)" #f="ngForm">
         <div class="form-group">
             <label for="content">Content</label>
             <input ngControl="content" type="text" class="form-control" id="content" #input [ngModel]="message?.content">
@@ -22,20 +23,21 @@ import {MessageService} from "./message.service";
 export class MessageInputComponent implements OnInit {
     message: Message = null;
 
-    constructor(private _messageService: MessageService) {}
+    constructor(private _messageService: MessageService, private _errorService: ErrorService) {}
 
-    onSubmit(form: any) {
+    onSubmit(form: any, input) {
         if (this.message) {
             // edit
             this.message.content = form.content;
             this._messageService.updateMessage(this.message)
                 .subscribe(
                     data => console.log(data),
-                    error => console.log(error)
+                    error => this._errorService.handleError(error)
                 );
             this.message = null;
 
         } else {
+            // save new
             const message: Message = new Message(form.content, null, 'Dummy');
             this._messageService.addMessage(message)
                 .subscribe(
@@ -43,8 +45,9 @@ export class MessageInputComponent implements OnInit {
                         console.log(data);
                         this._messageService.messages.push(data);
                     },
-                    error => console.log(error)
+                    error => this._errorService.handleError(error)
                 );
+            input.value = null;
         }
     }
 

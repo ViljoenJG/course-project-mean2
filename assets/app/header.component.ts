@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {ROUTER_DIRECTIVES} from "@angular/router";
+import {AuthService} from "./auth/auth.service";
 
 
 @Component({
@@ -8,8 +9,9 @@ import {ROUTER_DIRECTIVES} from "@angular/router";
         <header class="row">
             <nav class="col-md-8 col-md-offset-2">
                 <ul class="nav nav-pills">
-                    <li><a [routerLink]="['']">Messages</a></li>
-                    <li><a [routerLink]="['auth']">Authentication</a></li>
+                    <li><a [routerLink]="['messages']">Messages</a></li>
+                    <li><a [routerLink]="['auth/logout']" *ngIf="isLoggedIn()">Authentication</a></li>
+                    <li><a [routerLink]="['auth/signin']" *ngIf="!isLoggedIn()">Authentication</a></li>
                 </ul>
             </nav>
         </header>
@@ -38,5 +40,10 @@ import {ROUTER_DIRECTIVES} from "@angular/router";
 })
 
 export class HeaderComponent {
+    constructor (private _authService: AuthService) {}
+
+    isLoggedIn() {
+        return this._authService.isLoggedIn();
+    }
 
 }

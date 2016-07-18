@@ -51,6 +51,17 @@ gulp.task('vendor', function() {
     gulp.src('node_modules/ng2-bootstrap/**')
         .pipe(gulp.dest(vendor + '/ng2-bootstrap/'));
 
+    //Bootstrap 4
+    gulp.src('node_modules/bootstrap/dist/**')
+        .pipe(gulp.dest(vendor + '/bootstrap/'));
+
+    gulp.src('node_modules/font-awesome/fonts/**')
+        .pipe(gulp.dest(vendor + '/font-awesome/fonts'));
+
+    // jQuery
+    gulp.src('node_modules/jquery/dist/**')
+        .pipe(gulp.dest(vendor + '/jquery'));
+
     //font-awesome
     gulp.src('node_modules/font-awesome/css/font-awesome.min.css')
         .pipe(gulp.dest(vendor + '/font-awesome/css'));

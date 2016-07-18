@@ -7,4 +7,11 @@ var schema = new Schema({
     user: {type: Schema.Types.ObjectId, ref: 'User'}
 });
 
+schema.post('remove', function (messageDoc) {
+   User.findById(messageDoc.user, function (err, doc) {
+       doc.messages.pull(messageDoc);
+       doc.save();
+   })
+});
+
 module.exports = mongoose.model('Message', schema);

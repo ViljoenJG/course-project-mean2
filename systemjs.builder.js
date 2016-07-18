@@ -13,6 +13,6 @@ builder.bundle('app/boot.js', './public/js/app/boot.js', { minify: true, encodeN
         console.log('Build completed!');
     })
     .catch(function(err) {
-        console.log('Build error!')
+        console.log('Build errors!')
         console.log(err);
     });

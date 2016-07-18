@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, ControlGroup, Control, FormBuilder } from "@angular/common";
+import { User } from "./user";
+import { AuthService } from "./auth.service";
+import {Router} from "@angular/router";
+import {ErrorService} from "../errors/error.service";
 
 @Component({
     moduleId   : module.id,
@@ -15,7 +19,7 @@ import { Validators, ControlGroup, Control, FormBuilder } from "@angular/common"
                     <label for="password">Password</label>
                     <input [ngFormControl]="myForm.find('password')" type="password" id="password" class="form-control">
                 </div>
-                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Sign Up</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!myForm.valid">Sign In</button>
             </form>
         </section>
     `
@@ -23,10 +27,24 @@ import { Validators, ControlGroup, Control, FormBuilder } from "@angular/common"
 export class SigninComponent implements OnInit {
     myForm: ControlGroup;
 
-    constructor(private _fb: FormBuilder) {}
+    constructor(
+        private _fb: FormBuilder,
+        private _authService: AuthService,
+        private _router: Router,
+        private _errorService: ErrorService
+    ) {}
 
     onSubmit() {
-        console.log(this.myForm.value);
+        const user = new User(this.myForm.value.email, this.myForm.value.password);
+        this._authService.signin(user)
+            .subscribe(
+                data => {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userId', data.userId);
+                    this._router.navigate(['/messages']);
+                },
+                error => this._errorService.handleError(error)
+            )
     }
 
     ngOnInit() {
@@ -37,7 +55,6 @@ export class SigninComponent implements OnInit {
             ])],
             password: ['', Validators.required]
         })
-
     }
 
     private isEmail(control: Control): {[s: string]: boolean} {
